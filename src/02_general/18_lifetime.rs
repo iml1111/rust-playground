@@ -35,7 +35,7 @@ fn main() {
     {
         let string2 = String::from("xyz");
         result = longest(string1.as_str(), string2.as_str());
-    } // 여기가 a'가 수명주기의 끝. Error 발생.
+    } // 여기가 a'가 수명주기의 끝.(가장 짧은 y에 맞게 생성되었기 때문) Error 발생.
     //println!("The longest string is {}", result);
 
     // x의 라이프타임만 적용해보기
@@ -66,5 +66,13 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 }
 
 fn longest_x<'a>(x: &'a str, y: &str) -> &'a str {
+	// x 혹은 반환값은 y의 라이프타임과는 관련이 없기 때문에 특정하지 않아도 Error 안뜸.
     x
 }
+
+// Error가 뜨는 예제: result는 함수와 동시에 해제되지만, 밖에서 해당 메모리는 참조하고자 했음.
+// fn longest<'a>(x: &str, y: &str) -> &'a str {
+//     let result = String::from("really long string");
+//     result.as_str()
+// }
+
