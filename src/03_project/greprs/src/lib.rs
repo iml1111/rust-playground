@@ -1,3 +1,10 @@
+//! # Greprs Crate
+//!
+//! `greprs` is a collection of utilities to make performing certain
+//! calculations more convenient.
+
+// Crates.io 에 크레이트 배포하기
+// https://rinthel.github.io/rust-lang-book-ko/ch14-02-publishing-to-crates-io.html
 use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
@@ -9,15 +16,18 @@ pub struct Config {
     pub case_sensitive: bool,
 }
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
-        // 가장 쉽고(참조의 생명주기를 관리하지 않아) 약간 비효율적인 방법: clone 메소드 
-        // 참조에 비해 약간 더 많은 비용과 메모리가 소비.
-        if args.len() < 3 {
-            return Err("not enough args");
-        }
+    pub fn new(mut args: env::Args) -> Result<Config, &'static str> {
+        args.next();
 
-        let query = args[1].clone();
-        let filename = args[2].clone();
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
+
         // is_err: 해당 Result의 결과가 Error인지 true/false 반환
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
 
@@ -44,17 +54,22 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+/// # Search Normal
+/// This is normal search function.
+/// ```
+/// search(&config.query, &contents)
+/// ```
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-    results
+    contents.lines()
+            .filter(|line| line.contains(query))
+            .collect()
 }
 
+/// # Search Insensitive
+/// This is insensitive search function.
+/// ```
+/// search(&config.query, &contents)
+/// ```
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
     let mut results = Vec::new();

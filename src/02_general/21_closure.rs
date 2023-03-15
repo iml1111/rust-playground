@@ -45,7 +45,7 @@ fn main() {
     let s = example_closure(String::from("hello"));
     //let n = example_closure(5);
 
-    // Caching...
+    // Caching Logic
     generate_workout_v2(
         simulated_user_specified_value,
         simulated_random_number
