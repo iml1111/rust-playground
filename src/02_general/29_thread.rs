@@ -1,3 +1,5 @@
+// https://rinthel.github.io/rust-lang-book-ko/ch16-01-threads.html
+// https://rinthel.github.io/rust-lang-book-ko/ch16-02-message-passing.html
 use std::thread;
 use std::time::Duration;
 use std::sync::mpsc;
