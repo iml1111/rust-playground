@@ -1,4 +1,5 @@
 // https://rinthel.github.io/rust-lang-book-ko/ch16-03-shared-state.html
+// https://rinthel.github.io/rust-lang-book-ko/ch16-04-extensible-concurrency-sync-and-send.html
 // 스레드간 메모리를 공유하는 통신방법
 use std::sync::{Mutex, Arc};
 use std::thread;
