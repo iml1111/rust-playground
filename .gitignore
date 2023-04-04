@@ -10,3 +10,4 @@ Cargo.lock
 **/*.rs.bk
 src/.DS_Store
 .DS_Store
+src/03_project/actix-structure/.vscode/settings.json
