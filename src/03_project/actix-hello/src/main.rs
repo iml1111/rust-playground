@@ -80,7 +80,7 @@ async fn form_body_api(form: web::Form<Info>) -> Result<String> {
     Ok(format!("Body: {}", form.username))
 }
 
-fn add_error_header<B>(mut res: dev::ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
+fn 500_error_header<B>(mut res: dev::ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
     res.response_mut().headers_mut().insert(
         header::CONTENT_TYPE,
         header::HeaderValue::from_static("Error"),
@@ -101,7 +101,7 @@ async fn main() -> std::io::Result<()> {
             // https://actix.rs/docs/middleware#error-handlers
             .wrap(
                 ErrorHandlers::new()
-                    .handler(StatusCode::INTERNAL_SERVER_ERROR, add_error_header),
+                    .handler(StatusCode::INTERNAL_SERVER_ERROR, 500_error_header),
             )
             .app_data(
                 web::Data::new(
