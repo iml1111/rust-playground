@@ -16,7 +16,10 @@ use app::error_handler;
 
 async fn hello(data: Data<AppConfig>) -> impl Responder {
     let app_name = &data.app_name;
-    format!("Welcome to {app_name}!")
+    //format!("Welcome to {app_name}!")
+
+    // TODO: 어쩌면 이게 더 편할지도?
+    HttpResponse::NotFound().json(r#"{"msg": "not_found"}"#.to_string())
 }
 
 
@@ -31,16 +34,11 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(app_config.clone()))
             // Middlewares
             .wrap(Logger::default())
-            // TODO: 에러 핸들러에 진입할떄 compress인 경우 body가 출력이 안됨  왜?
-             // 뭔가 헤더를 좀더 만져줘야 하나?
             .wrap(Compress::default())
             // TODO: Error Handlers
-            .wrap(
-                error_handler::init(ErrorHandlers::new())
-            )
+            .wrap(error_handler::init(ErrorHandlers::new()))
             // TODO: Routers
             .route("/", web::get().to(hello))
-            .route("/404", web::get().to(HttpResponse::NotFound))
             // https://github.dev/emreyalvac/actix-web-jwt/
     })
     .keep_alive(KeepAlive::Os) 
