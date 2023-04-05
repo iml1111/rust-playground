@@ -32,6 +32,7 @@ async fn main() -> std::io::Result<()> {
             // Middlewares
             .wrap(Logger::default())
             // TODO: 에러 핸들러에 진입할떄 compress인 경우 body가 출력이 안됨  왜?
+             // 뭔가 헤더를 좀더 만져줘야 하나?
             .wrap(Compress::default())
             // TODO: Error Handlers
             .wrap(
