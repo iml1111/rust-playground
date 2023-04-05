@@ -3,7 +3,8 @@ mod config;
 mod app;
 
 use actix_web::{
-    HttpServer, App,
+    HttpServer, App, Responder, HttpResponse,
+    web,
     web::Data,
     http::KeepAlive, 
     middleware::{Logger, Compress, ErrorHandlers},
@@ -12,6 +13,11 @@ use actix_web::{
 use env_logger::{init_from_env, Env};
 use config::AppConfig;
 use app::error_handler;
+
+async fn hello(data: Data<AppConfig>) -> impl Responder {
+    let app_name = &data.app_name;
+    format!("Welcome to {app_name}!")
+}
 
 
 #[actix_web::main]
@@ -25,15 +31,15 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(app_config.clone()))
             // Middlewares
             .wrap(Logger::default())
+            // TODO: 에러 핸들러에 진입할떄 compress인 경우 body가 출력이 안됨  왜?
             .wrap(Compress::default())
             // TODO: Error Handlers
             .wrap(
-                ErrorHandlers::new()
-                    .handler(
-                        StatusCode::NOT_FOUND,
-                        error_handler::not_found)
+                error_handler::init(ErrorHandlers::new())
             )
-            // TODO: Routers 
+            // TODO: Routers
+            .route("/", web::get().to(hello))
+            .route("/404", web::get().to(HttpResponse::NotFound))
             // https://github.dev/emreyalvac/actix-web-jwt/
     })
     .keep_alive(KeepAlive::Os) 
