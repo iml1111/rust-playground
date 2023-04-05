@@ -6,11 +6,12 @@ use actix_web::{
     HttpServer, App,
     web::Data,
     http::KeepAlive, 
-    middleware::{Logger, Compress},
+    middleware::{Logger, Compress, ErrorHandlers},
+    http::StatusCode,
 };
 use env_logger::{init_from_env, Env};
 use config::AppConfig;
-use app::error_handler::error_handlers;
+use app::error_handler;
 
 
 #[actix_web::main]
@@ -26,11 +27,18 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Compress::default())
             // TODO: Error Handlers
-            .wrap(error_handlers())
+            .wrap(
+                ErrorHandlers::new()
+                    .handler(
+                        StatusCode::NOT_FOUND,
+                        error_handler::not_found)
+            )
             // TODO: Routers 
+            // https://github.dev/emreyalvac/actix-web-jwt/
     })
     .keep_alive(KeepAlive::Os) 
     .workers(4)
     .bind(("127.0.0.1", 5000))?
     .run().await
 }
+

@@ -1,7 +1,7 @@
 use actix_web:: {
     HttpResponse,
     dev::ServiceResponse,
-    body::BoxBody,
+    body::{EitherBody, BoxBody},
     middleware::{ErrorHandlerResponse, ErrorHandlers},
     http::StatusCode,
     http::header::{CONTENT_TYPE, HeaderValue},
@@ -10,23 +10,13 @@ use actix_web:: {
 };
 use serde_json::json;
 
-pub fn error_handlers() -> ErrorHandlers<BoxBody> {
-    ErrorHandlers::new()
-        .handler(StatusCode::NOT_FOUND, not_found)
-}
-
-fn not_found<B>(res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<BoxBody>> {
-    let response = get_error_response(&res, "not_found");
-    Ok(ErrorHandlerResponse::Response(res.map_into_right_body(response)))
-}
-
-fn get_error_response<B>(res: &ServiceResponse<B>, error: &str) -> HttpResponse<BoxBody> {
-    res.response_mut()
-        .headers_mut()
-        .insert(
-            CONTENT_TYPE,
-            HeaderValue::from_static("application/json"),
-        );
-    HttpResponse::build(res.status())
-        .body(Bytes::from(json!({"msg": error})))
+pub fn not_found<B>(mut res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
+    let error_message = "An error occurred";
+    // Destructures ServiceResponse into request and response components
+    let (req, res) = res.into_parts();
+    // Create a new response with the modified body
+    let res = res.set_body(error_message).map_into_boxed_body();
+    // Create a new ServiceResponse with the modified response
+    let res = ServiceResponse::new(req, res).map_into_right_body();
+    Ok(ErrorHandlerResponse::Response(res))
 }
