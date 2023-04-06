@@ -4,7 +4,7 @@ use actix_web::{
     HttpResponse
 };
 use crate::app::response::Response;
-use model::repository::champion::{Champion, ChampionOut};
+use crate::model::repository::champion::{Champion, ChampionOut};
 
 #[get("/champion")]
 pub async fn get_champion() -> impl Responder {
