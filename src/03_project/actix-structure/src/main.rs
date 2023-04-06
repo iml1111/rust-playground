@@ -8,18 +8,19 @@ use actix_web::{
     web::Data,
     http::KeepAlive, 
     middleware::{Logger, Compress, ErrorHandlers},
-    http::StatusCode,
 };
 use env_logger::{init_from_env, Env};
 use config::AppConfig;
 use app::error_handler;
+use app::response;
 
 async fn hello(data: Data<AppConfig>) -> impl Responder {
     let app_name = &data.app_name;
-    //format!("Welcome to {app_name}!")
+    format!("Welcome to {app_name}!")
+}
 
-    // TODO: 어쩌면 이게 더 편할지도?
-    HttpResponse::NotFound().json(r#"{"msg": "not_found"}"#.to_string())
+async fn not_found_test() -> impl Responder {
+    format!("Welcome!")
 }
 
 
@@ -39,7 +40,9 @@ async fn main() -> std::io::Result<()> {
             .wrap(error_handler::init(ErrorHandlers::new()))
             // TODO: Routers
             .route("/", web::get().to(hello))
+            .route("/404", web::get().to(not_found_test))
             // https://github.dev/emreyalvac/actix-web-jwt/
+            // https://github.dev/XAMPPRocky/tokei_rs
     })
     .keep_alive(KeepAlive::Os) 
     .workers(4)
