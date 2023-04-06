@@ -16,17 +16,23 @@ pub fn init<B: MessageBody + 'static>(error_handlers: ErrorHandlers<B>) -> Error
         .handler(StatusCode::INTERNAL_SERVER_ERROR, internal_server_error)
 }
 
-pub fn not_found<B: MessageBody + 'static>(res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
+pub fn not_found<B: MessageBody + 'static>(
+    res: ServiceResponse<B>
+) -> Result<ErrorHandlerResponse<B>> {
     log::error!("404 Error Hooked!");
     get_default_error_response(res, "not_found".to_string())
 }
 
-pub fn method_not_allowed<B: MessageBody + 'static>(res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
+pub fn method_not_allowed<B: MessageBody + 'static>(
+    res: ServiceResponse<B>
+) -> Result<ErrorHandlerResponse<B>> {
     log::error!("405 Error Hooked!");
     get_default_error_response(res, "method_not_found".to_string())
 }
 
-pub fn internal_server_error<B: MessageBody + 'static>(res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
+pub fn internal_server_error<B: MessageBody + 'static>(
+    res: ServiceResponse<B>
+) -> Result<ErrorHandlerResponse<B>> {
     log::error!("500 Error Hooked!");
     get_default_error_response(res, "internal_server_error".to_string())
 }

@@ -36,7 +36,6 @@ async fn main() -> std::io::Result<()> {
             // Middlewares
             .wrap(Logger::default())
             .wrap(Compress::default())
-            // TODO: Error Handlers
             .wrap(error_handler::init(ErrorHandlers::new()))
             // TODO: Routers
             .route("/", web::get().to(hello))
