@@ -1,6 +1,7 @@
 
 mod config;
 mod app;
+mod model;
 
 use actix_web::{
     web,
@@ -13,7 +14,6 @@ use env_logger::{init_from_env, Env};
 use config::AppConfig;
 use app::error_handler;
 use app::router;
-use model::repository::champion::{Champion, ChampionOut};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -29,10 +29,8 @@ async fn main() -> std::io::Result<()> {
             .wrap(Compress::default())
             .wrap(error_handler::init(ErrorHandlers::new()))
             // TODO: Routers
-            // https://github.dev/emreyalvac/actix-web-jwt/
-            // https://github.dev/XAMPPRocky/tokei_rs
             .service(router::template::index)
-            .service(web::scope("/v1").configure(router::v1::init))
+            .service(web::scope("/api/v1").configure(router::v1::init))
 
     })
     .keep_alive(KeepAlive::Os) 

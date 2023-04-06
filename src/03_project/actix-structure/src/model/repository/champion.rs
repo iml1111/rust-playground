@@ -1,14 +1,14 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)];
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Champion {
-    name: String,
-    role: String,
-    health: i32,
-    affiliation: String,
+    pub name: String,
+    pub role: String,
+    pub health: i32,
+    pub affiliation: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)];
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ChampionOut {
-    name: String,
+    pub name: String,
 }
