@@ -1,9 +1,10 @@
 use actix_web::{
-    Responder, get, post,
-    web::Json, HttpResponse, 
+    Responder, get, post, put,
+    web::{Json, Path}, HttpResponse, 
     http::header::ContentType
 };
 use crate::app::response::Response;
+use crate::controller::calc;
 use crate::model::repository::champion::{Champion, ChampionOut};
 
 #[get("/champion")]
@@ -30,4 +31,17 @@ pub async fn create_champion(champion: Json<Champion>) -> impl Responder {
     HttpResponse::Ok()
         .content_type(ContentType::json())
         .body(res)
+}
+
+#[put("/calc/add/{num1}/{num2}")]
+pub async fn calc_add(nums: Path<(i32, i32)>) -> impl Responder {
+    let (num1, num2) = nums.into_inner();
+    HttpResponse::Ok()
+        .content_type(ContentType::json())
+        .body(
+            serde_json::json!({
+                "msg": "Calculation successful",
+                "data": calc::add(num1, num2)
+            }).to_string()
+        )
 }

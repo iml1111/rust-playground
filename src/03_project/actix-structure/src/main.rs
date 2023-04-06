@@ -1,6 +1,6 @@
-
 mod config;
 mod app;
+mod controller;
 mod model;
 
 use actix_web::{
