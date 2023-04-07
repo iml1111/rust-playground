@@ -2,6 +2,7 @@ mod config;
 mod app;
 mod controller;
 mod model;
+mod tests;
 
 use actix_web::{
     web,
