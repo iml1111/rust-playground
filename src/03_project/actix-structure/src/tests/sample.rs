@@ -6,6 +6,11 @@ mod tests {
     const PATH: &str = "/api/v1";
 
     #[actix_web::test]
+    async fn test_true() {
+        assert!(true);
+    }
+
+    #[actix_web::test]
     async fn test_index() {
         let app = test::init_service(
             App::new().service(router::template::index)
@@ -14,5 +19,4 @@ mod tests {
         let resp = test::call_service(&app, req).await;
         assert!(resp.status().is_success());
     }
-    
 }
