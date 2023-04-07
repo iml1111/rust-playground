@@ -28,7 +28,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Compress::default())
             .wrap(error_handler::init(ErrorHandlers::new()))
-            // TODO: Routers
+            // Routers
             .service(router::template::index)
             .service(web::scope("/api/v1").configure(router::v1::init))
 
