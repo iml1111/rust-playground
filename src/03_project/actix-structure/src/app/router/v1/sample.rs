@@ -1,7 +1,6 @@
 use actix_web::{
     Responder, get, post, put,
-    web::{Json, Path}, HttpResponse, 
-    http::header::ContentType
+    web::{Json, Path},
 };
 use crate::app::response::json_response;
 use crate::controller::calc;
