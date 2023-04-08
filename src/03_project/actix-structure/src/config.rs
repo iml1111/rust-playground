@@ -9,6 +9,7 @@ pub trait IConfig {
 #[derive(Clone)]
 pub struct AppConfig {
     pub app_name: String,
+    pub worker_num: usize,
     pub contact_url: String,
     pub slow_api_time: f32,
 }
@@ -19,6 +20,10 @@ impl AppConfig {
 
         let app_name: String = env::var("APP_NAME")
             .unwrap_or("IMActor".to_string());
+
+        let worker_num: String = env::var("WORKER_NUM")
+            .unwrap_or("1".to_string());
+        let worker_num: usize = worker_num.parse().unwrap();
         
         let contact_url: String = env::var("CONTACT_URL")
             .unwrap_or("github.com/iml1111".to_string());
@@ -29,6 +34,7 @@ impl AppConfig {
 
         AppConfig {
             app_name,
+            worker_num,
             contact_url,
             slow_api_time
         }

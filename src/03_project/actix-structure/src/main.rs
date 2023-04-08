@@ -19,6 +19,7 @@ use app::router;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let app_config = AppConfig::from_env(".env");
+    let ext_app_config = app_config.clone();
     init_from_env(Env::new().default_filter_or("info"));
 
     HttpServer::new(move || {
@@ -35,8 +36,8 @@ async fn main() -> std::io::Result<()> {
 
     })
     .keep_alive(KeepAlive::Os) 
-    .workers(4)
-    .bind(("127.0.0.1", 8080))?
+    .workers(ext_app_config.worker_num)
+    .bind(("0.0.0.0", 8080))?
     .run().await
 }
 
